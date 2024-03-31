@@ -1,0 +1,16 @@
+%{
+int vowelCount = 0;
+%}
+
+%%
+[aeiouAEIOU]    { vowelCount++; }
+.               ; /* Ignore other characters */
+
+%%
+
+int main() {
+    yyin = stdin;
+    yylex();
+    printf("Number of vowels: %d\n", vowelCount);
+    return 0;
+}

@@ -1,0 +1,38 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+"#"include             { printf("Token: INCLUDE, Lexeme: %s\n", yytext); }
+"int"                  { printf("Token: INT_TYPE, Lexeme: %s\n", yytext); }
+"void"                 { printf("Token: VOID_TYPE, Lexeme: %s\n", yytext); }
+"printf"               { printf("Token: PRINTF, Lexeme: %s\n", yytext); }
+"\""([^"\\]|\\.)*"\""  { printf("Token: STRING_LITERAL, Lexeme: %s\n", yytext); }
+"="                    { printf("Token: ASSIGNMENT_OPERATOR, Lexeme: %s\n", yytext); }
+";"                    { printf("Token: SEMICOLON, Lexeme: %s\n", yytext); }
+[0-9]+                 { printf("Token: INTEGER_CONSTANT, Lexeme: %s\n", yytext); }
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Token: IDENTIFIER, Lexeme: %s\n", yytext); }
+[ \t\n]                ; /* Ignore whitespace */
+.                      { printf("Token: %s, Lexeme: %s\n", yytext, yytext); }
+
+%%
+
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        printf("Usage: %s <input_file>\n", argv[0]);
+        return 1;
+    }
+
+    FILE *fp = fopen(argv[1], "r");
+    if (!fp) {
+        printf("Error opening file.\n");
+        return 1;
+    }
+
+    yyin = fp;
+    yylex();
+
+    fclose(fp);
+
+    return 0;
+}

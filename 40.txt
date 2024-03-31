@@ -1,0 +1,33 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SIZE 100
+%}
+
+%option noyywrap
+
+%token ID PLUS MULT LPAREN RPAREN DOLLAR
+
+%%
+
+[ \t\n]+              /* skip whitespace */
+[a-zA-Z]+            { printf("Shift %s\n", yytext); }
+"+"                  { printf("Reduce +\n"); }
+"*"                  { printf("Reduce *\n"); }
+"("                  { printf("Shift (\n"); }
+")"                  { printf("Shift )\n"); }
+"$"                  { printf("Reduce $\n"); }
+
+%%
+
+int main() {
+    char expression[MAX_SIZE];
+    printf("Enter the expression: ");
+    scanf("%s", expression);
+
+    yy_scan_string(expression);
+    yylex();
+    return 0;
+}
